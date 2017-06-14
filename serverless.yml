@@ -20,6 +20,7 @@ service: slackbot
 provider:
   name: aws
   runtime: nodejs6.10
+  environment: "${file(secrets.json)}"
 
 # you can overwrite defaults here
 #  stage: dev
@@ -53,6 +54,10 @@ provider:
 #  exclude:
 #    - exclude-me.js
 #    - exclude-me-dir/**
+
+package:
+  exclude:
+    - secrets.json
 
 functions:
   hello:
