@@ -33,7 +33,7 @@ module.exports.singleUser = (event, context, callback) => {
 
 function filterRecentEvents(events) {
   return events.data.filter(event => {
-    return moment(event.updated_at).isAfter(weekStart);
+    return moment(event.created_at).isAfter(weekStart);
   });
 }
 
