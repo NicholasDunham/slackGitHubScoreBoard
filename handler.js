@@ -2,9 +2,9 @@
 const GitHubApi = require("github");
 const moment = require("moment");
 
-module.exports.singleUser = (event, context, callback) => {
-  const weekStart = moment().startOf("day").subtract(1, "week");
+const weekStart = moment().startOf("day").subtract(6, "month");
 
+module.exports.singleUser = (event, context, callback) => {
   const github = new GitHubApi();
   github.authenticate({
     type: "oauth",
@@ -19,15 +19,37 @@ module.exports.singleUser = (event, context, callback) => {
       direction: "desc",
       per_page: 100
     })
+    .then(filterRecentRepos)
+    .then(cleanUpRepos)
     .then(repos => {
-      const recent = repos.data.filter(repo =>
-        moment(repo.updated_at).isAfter(weekStart)
-      );
       const response = {
         statusCode: 200,
-        body: JSON.stringify(recent)
+        body: JSON.stringify([...repos])
       };
 
       callback(null, response);
     });
 };
+
+// Helper Functions
+
+function filterRecentRepos(repos) {
+  return repos.data.filter(repo => {
+    return moment(repo.updated_at).isAfter(weekStart);
+  });
+}
+
+function cleanUpRepos(repos) {
+  return repos.map(repo => {
+    return {
+      id: repo.id,
+      name: repo.name,
+      owner: {
+        login: repo.owner.login,
+        id: repo.owner.id
+      },
+      html_url: repo.html_url,
+      updated_at: repo.updated_at
+    };
+  });
+}
