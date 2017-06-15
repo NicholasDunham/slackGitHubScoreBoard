@@ -18,10 +18,17 @@ module.exports.singleUser = (event, context, callback) => {
     .then(filterRecentEvents)
     .then(countEvents)
     .then(finalScore => {
+      // const response = {
+      //   statusCode: 200,
+      //   body: JSON.stringify({
+      //     text: `Your score: ${finalScore}`
+      //   })
+      // };
+
       const response = {
         statusCode: 200,
         body: JSON.stringify({
-          message: finalScore
+          text: `Your GitHub score for the past seven days: ${finalScore}`
         })
       };
 
