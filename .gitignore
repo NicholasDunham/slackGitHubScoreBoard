@@ -5,5 +5,6 @@ jspm_packages
 # Serverless directories
 .serverless
 
-# Environment variables
+# Secret Stuff
 secrets.json
+userTable.js
