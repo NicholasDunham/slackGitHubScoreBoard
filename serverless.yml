@@ -66,6 +66,12 @@ functions:
       - http:
           path: slashCommand
           method: post
+  cronCommand:
+    handler: handler.cronCommand
+    events:
+      - http:
+          path: cronCommand
+          method: post
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
