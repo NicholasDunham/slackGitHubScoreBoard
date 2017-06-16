@@ -60,11 +60,11 @@ package:
     - secrets.json
 
 functions:
-  singleUser:
-    handler: handler.singleUser
+  slashCommand:
+    handler: handler.slashCommand
     events:
       - http:
-          path: singleUser
+          path: slashCommand
           method: post
 
 #    The following are a few example events you can configure

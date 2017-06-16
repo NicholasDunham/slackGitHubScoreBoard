@@ -16,17 +16,15 @@ const helpText =
 const errorText =
   "Sorry, either I didn't understand your command or I can't find that user. Please try again, or type `/scoreboard help` for options.";
 
-module.exports.singleUser = (event, context, callback) => {
+module.exports.slashCommand = (event, context, callback) => {
   const params = qs.parse(event.body);
   let slackName = params.text || params.user_name;
 
-  lookup(slackName)
-    .then(filterRecentEvents)
-    .then(countEvents)
+  userScore(slackName)
     .then(score => {
       return JSON.stringify({
         response_type: "in_channel",
-        text: `So far this week, @${slackName} has earned ${score} points for contributions on GitHub.`
+        text: `So far this week, ${slackName} has earned ${score} points for contributions on GitHub.`
       });
     })
     .catch(msg => {
@@ -45,7 +43,15 @@ module.exports.singleUser = (event, context, callback) => {
 
 // Helper Functions
 
-function lookup(slackName) {
+function userScore(slackName) {
+  const score = getActivity(slackName)
+    .then(filterRecentEvents)
+    .then(countEvents);
+
+  return score;
+}
+
+function getActivity(slackName) {
   if (slackName === "help") {
     return Promise.reject(helpText);
   }
