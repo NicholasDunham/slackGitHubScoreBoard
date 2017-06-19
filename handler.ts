@@ -13,12 +13,14 @@ github.authenticate({
   token: process.env.GITHUB_TOKEN
 });
 
-const helpText = `To retrieve your own statistics, type \`/scoreboard\`.
-To retrieve another user's statistics, use an @mention after the command, like this:
-\`/scoreboard @nmdnhm\`
-Note that I can only handle one @mention at a time (for now).`;
-const errorText = `Sorry, either I didn't understand your command or I can't find that user.
-Please try again, or type \`/scoreboard help\` for options.`;
+const helpText =
+  "To retrieve your own statistics, type `/scoreboard`.\n" +
+  "To retrieve another user's statistics, use an @mention after the " +
+  "command, like this: `/scoreboard @nmdnhm`\n" +
+  "Note that I can only handle one @mention at a time (for now).";
+const errorText =
+  "Sorry, either I didn't understand your command or I can't find that user. " +
+  "Please try again, or type `/scoreboard help` for options.";
 
 let startTime: moment.Moment;
 let endTime: moment.Moment;
@@ -41,7 +43,10 @@ slashCommand = (event, context, callback: Callback) => {
     .then(result => {
       return JSON.stringify({
         response_type: "in_channel",
-        text: `So far this week, ${result.user} has earned ${result.score} points for public contributions on GitHub.`
+        text:
+          `So far this week, ${result.user} has earned ${result.score} ` +
+            `${result.score === 1 ? "point" : "points"} ` +
+            `for public contributions on GitHub.`
       });
     })
     .catch((err: string) => {
