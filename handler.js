@@ -24,29 +24,36 @@ let endTime;
 
 module.exports.slashCommand = (event, context, callback) => {
   const params = qs.parse(event.body);
-  let slackName = params.text || params.user_name;
-  startTime = moment().tz("America/Los_Angeles").startOf("isoWeek");
-  endTime = moment();
-
-  userScore(slackName)
-    .then(result => {
-      return JSON.stringify({
-        response_type: "in_channel",
-        text: `So far this week, ${result.user} has earned ${result.score} points for public contributions on GitHub.`
-      });
-    })
-    .catch(msg => {
-      return JSON.stringify({
-        text: msg
-      });
-    })
-    .then(msg => {
-      const response = {
-        statusCode: 200,
-        body: msg
-      };
-      callback(null, response);
+  if (params.token !== process.env.SLACK_TOKEN) {
+    return callback(null, {
+      statusCode: 401,
+      body: JSON.stringify("You are not authorized to access this resource.")
     });
+  } else {
+    let slackName = params.text || params.user_name;
+    startTime = moment().tz("America/Los_Angeles").startOf("isoWeek");
+    endTime = moment();
+
+    userScore(slackName)
+      .then(result => {
+        return JSON.stringify({
+          response_type: "in_channel",
+          text: `So far this week, ${result.user} has earned ${result.score} points for public contributions on GitHub.`
+        });
+      })
+      .catch(msg => {
+        return JSON.stringify({
+          text: msg
+        });
+      })
+      .then(msg => {
+        const response = {
+          statusCode: 200,
+          body: msg
+        };
+        return callback(null, response);
+      });
+  }
 };
 
 module.exports.cronCommand = (event, context) => {
@@ -54,8 +61,6 @@ module.exports.cronCommand = (event, context) => {
   const now = momentTz().tz("America/Los_Angeles");
   startTime = moment(now).subtract(1, "day").startOf("isoWeek");
   endTime = moment(startTime).endOf("isoWeek");
-  console.log(startTime);
-  console.log(endTime);
 
   Promise.all(usernames.map(userScore))
     .then(weeklyMessage)
