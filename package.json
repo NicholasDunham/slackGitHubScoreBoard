@@ -23,5 +23,11 @@
     "querystring": "^0.2.0",
     "request": "^2.81.0",
     "request-promise": "^4.2.1"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "0.0.13",
+    "@types/moment-timezone": "^0.2.34",
+    "@types/request-promise": "^4.1.34",
+    "serverless-plugin-typescript": "^0.3.1"
   }
 }

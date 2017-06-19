@@ -7,4 +7,4 @@ jspm_packages
 
 # Secret Stuff
 secrets.json
-userTable.js
+userTable.ts

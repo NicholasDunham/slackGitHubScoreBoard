@@ -1,5 +1,8 @@
 service: slackbot
 
+plugins:
+  - serverless-plugin-typescript
+
 provider:
   name: aws
   runtime: nodejs6.10
